@@ -2,25 +2,38 @@ version: "3.8"
 services:
   api:
     build: ./api/
-    image: api-image:0.1
-    container_name: api-container
+    image: demo3-api-image:0.1
+    container_name: demo3-api-container
     ports:
-      - '8000:3000'
+      - '3001:3000'
     volumes:
-      - ./api:/app
-      - api-volume:/app/node_modules
+      - ./api:/app/
+      - api-volume:/app/node_modules/
+    networks:
+      - app-network
   frontend:
     build: ./frontend/
-    image: frontend-image:0.1
-    container_name: frontend-container
+    image: demo3-frontend-image:0.1
+    container_name: demo3-frontend-container
+    depends_on:
+      - api
     ports:
-      - '3000:5173'
+      - '3002:5173'
     volumes:
-      - ./frontend:/app
-      - frontend-volume:/app/node_modules
+      - ./frontend:/app/
+      - frontend-volume:/app/node_modules/
     stdin_open: true
     tty: true
+    networks:
+      - app-network
 volumes:
   api-volume:
+    name: demo3-api-volume
   frontend-volume:
+    name: demo3-frontend-volume
+networks:
+  app-network:
+    name: mern-network
+    driver: bridge
+
 
