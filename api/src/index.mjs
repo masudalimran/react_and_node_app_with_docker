@@ -39,6 +39,38 @@ app.get("/", (req, res) => {
       name: "Sakib",
       age: 19,
     },
+    {
+      name: "Ahsan",
+      age: 19,
+    },
+    {
+      name: "Nadim",
+      age: 19,
+    },
+    {
+      name: "Shamsul",
+      age: 19,
+    },
+    {
+      name: "Ridoy",
+      age: 19,
+    },
+    {
+      name: "Ansar",
+      age: 19,
+    },
+    {
+      name: "Jadid",
+      age: 19,
+    },
+    {
+      name: "Nabin",
+      age: 19,
+    },
+    {
+      name: "Rafid",
+      age: 19,
+    },
   ];
   res.send(data);
 });

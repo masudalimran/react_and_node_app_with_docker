@@ -10,6 +10,7 @@ type ResponseDataType = {
 };
 
 function App() {
+  const [loadingBackend, setLoadingBackend] = useState<boolean>(true);
   const [dataFromBackend, setDataFromBackend] = useState<ResponseDataType[]>(
     []
   );
@@ -22,7 +23,11 @@ function App() {
   };
 
   useEffect(() => {
+    setLoadingBackend(true);
     connectToBackend();
+    setTimeout(() => {
+      setLoadingBackend(false);
+    }, 3000);
   }, []);
 
   return (
@@ -36,10 +41,13 @@ function App() {
         </a>
       </div>
       <h1>Built With Docker</h1>
+      <h2>
+        {loadingBackend ? "Connecting To " : "Connected With "}Backend (
+        {loadingBackend ? "..." : dataFromBackend.length} data found)
+      </h2>
       <div
         style={{
           display: "flex",
-          // border: "1px solid black",
           padding: "1rem 2rem",
           justifyContent: "space-between",
           alignItems: "center",
@@ -51,25 +59,42 @@ function App() {
         <p style={{ fontWeight: 900 }}>Name</p>
         <p style={{ fontWeight: 900 }}>Age</p>
       </div>
-      <div style={{ maxHeight: "500px", overflowY: "scroll" }}>
-        {dataFromBackend.length > 0 &&
-          dataFromBackend.map((data, index) => (
-            <div
-              key={index}
-              style={{
-                display: "flex",
-                border: "1px solid white",
-                padding: "1rem 2rem",
-                justifyContent: "space-between",
-                alignItems: "center",
-                gap: "1rem",
-              }}
-            >
-              <p>{data.name}</p>
-              <p>{data.age}</p>
-            </div>
-          ))}
-      </div>
+      {loadingBackend ? (
+        <div style={{ height: "500px" }}>
+          <p>Loading...</p>
+        </div>
+      ) : (
+        <>
+          <div style={{ height: "500px", overflowY: "scroll" }}>
+            {dataFromBackend.length > 0 &&
+              dataFromBackend.map((data, index) => (
+                <div
+                  key={index}
+                  style={{
+                    display: "flex",
+                    border: "1px solid white",
+                    padding: "1rem 2rem",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    gap: "1rem",
+                  }}
+                >
+                  <p>{data.name}</p>
+                  <p
+                    style={{
+                      backgroundColor: "white",
+                      borderRadius: ".25rem",
+                      padding: ".5rem",
+                      color: "black",
+                    }}
+                  >
+                    {data.age}
+                  </p>
+                </div>
+              ))}
+          </div>
+        </>
+      )}
     </>
   );
 }
