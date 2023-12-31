@@ -1,10 +1,29 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
 import "./App.css";
+import axios from "axios";
+
+type ResponseDataType = {
+  name: string;
+  age: number;
+};
 
 function App() {
-  const [count, setCount] = useState(0);
+  const [dataFromBackend, setDataFromBackend] = useState<ResponseDataType[]>(
+    []
+  );
+
+  const connectToBackend = () => {
+    axios
+      .get("http://localhost:3001/")
+      .then((response) => setDataFromBackend(response.data))
+      .catch((error) => alert(error.message));
+  };
+
+  useEffect(() => {
+    connectToBackend();
+  }, []);
 
   return (
     <>
@@ -16,18 +35,41 @@ function App() {
           <img src={reactLogo} className="logo react" alt="React logo" />
         </a>
       </div>
-      <h1>Imon + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
+      <h1>Built With Docker</h1>
+      <div
+        style={{
+          display: "flex",
+          // border: "1px solid black",
+          padding: "1rem 2rem",
+          justifyContent: "space-between",
+          alignItems: "center",
+          gap: "1rem",
+          backgroundColor: "white",
+          color: "black",
+        }}
+      >
+        <p style={{ fontWeight: 900 }}>Name</p>
+        <p style={{ fontWeight: 900 }}>Age</p>
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <div style={{ maxHeight: "500px", overflowY: "scroll" }}>
+        {dataFromBackend.length > 0 &&
+          dataFromBackend.map((data, index) => (
+            <div
+              key={index}
+              style={{
+                display: "flex",
+                border: "1px solid white",
+                padding: "1rem 2rem",
+                justifyContent: "space-between",
+                alignItems: "center",
+                gap: "1rem",
+              }}
+            >
+              <p>{data.name}</p>
+              <p>{data.age}</p>
+            </div>
+          ))}
+      </div>
     </>
   );
 }
